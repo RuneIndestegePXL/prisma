@@ -10,7 +10,8 @@
     "@prisma/client": "^6.4.1",
     "dotenv": "^16.4.7",
     "graphql": "^16.8.1",
-    "graphql-tag": "^2.12.6"
+    "graphql-tag": "^2.12.6",
+    "prisma": "^6.4.1"
   },
   "scripts": {
     "start": "node prisma.js"
