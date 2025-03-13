@@ -1,0 +1,122 @@
+# Product schema
+
+extend schema @link(url: "https://specs.apollo.dev/federation/v2.0", import: ["@key", "@shareable", "@external"])
+
+"""Represents a product in the system with business details."""
+type Product @key(fields: "id") {
+  """The unique identifier of the product."""
+  id: ID! @shareable
+  """The name of the product."""
+  name: String!
+  """A description ocdf the product."""
+  description: String
+  """The product category."""
+  category: String
+  """The URL for the product image."""
+  imageUrl: String
+  """The base price of the product."""
+  basePrice: Float!
+  """Business pricing details for the product."""
+  pricing: ProductPricing
+  """Inventory details of the product."""
+  inventory: ProductInventory
+  """Supplier information for the product."""
+  supplier: Supplier
+  """The date and time when the product was created."""
+  createdAt: String
+  """The date and time when the product was last updated."""
+  updatedAt: String
+}
+
+type Order @key(fields: "id") {
+  id: ID!  @external
+}
+
+"""Pricing details with discounts and net pricing."""
+type ProductPricing {
+  """The list (or original) price."""
+  listPrice: Float!
+  """The discount amount if applicable."""
+  discount: Float
+  """The calculated net price after discounts."""
+  netPrice: Float!
+  """The currency format, e.g., USD."""
+  currency: String!
+}
+
+"""Inventory specifics of the product."""
+type ProductInventory {
+  """Items in stock."""
+  stock: Int!
+  """Warehouse or store location for the product."""
+  warehouseLocation: String
+  """The level at which the product should be reordered."""
+  reorderLevel: Int
+}
+
+"""Supplier details supplying the product."""
+type Supplier {
+  """The unique identifier of the supplier."""
+  id: ID!
+  """The name of the supplier."""
+  name: String!
+  """Contact details of the supplier."""
+  contact: SupplierContact
+}
+
+"""Contact details for a supplier."""
+type SupplierContact {
+  """The supplier's phone number."""
+  phone: String
+  """The supplier's email address."""
+  email: String
+  """The supplier's physical address."""
+  address: String
+}
+
+ type Query {
+  """Retrieve a product by its ID."""
+  getProduct(id: ID!): Product
+  """List all products."""
+  listProducts: [Product!]!
+  """Retrieve products by category."""
+  productsByCategory(category: String!): [Product!]!
+}
+
+ type Mutation {
+  """Create a new product with business details."""
+  createProduct(
+    name: String!
+    description: String
+    category: String
+    imageUrl: String
+    basePrice: Float!
+    listPrice: Float!
+    discount: Float
+    currency: String!
+    stock: Int!
+    warehouseLocation: String
+    reorderLevel: Int
+    supplierId: ID
+  ): Product
+
+  """Update an existing product's business details."""
+  updateProduct(
+    id: ID!
+    name: String
+    description: String
+    category: String
+    imageUrl: String
+    basePrice: Float
+    listPrice: Float
+    discount: Float
+    currency: String
+    stock: Int
+    warehouseLocation: String
+    reorderLevel: Int
+    supplierId: ID
+  ): Product
+
+  """Delete a product."""
+  deleteProduct(id: ID!): Boolean
+}

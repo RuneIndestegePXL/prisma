@@ -1,0 +1,57 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Product {
+  id               BigInt            @id @default(autoincrement())
+  name             String            @db.VarChar(255)
+  description      String?           @db.Text
+  category         String?           @db.VarChar(255)
+  imageUrl         String?           @db.Text
+  basePrice        Decimal           @db.Decimal(10, 2)
+  createdAt        DateTime?         @default(now()) @db.Timestamp(0)
+  updatedAt        DateTime?         @default(now()) @db.Timestamp(0)
+  supplierId       BigInt?
+  Supplier         Supplier?         @relation(fields: [supplierId], references: [id], onUpdate: NoAction, map: "Product_ibfk_1")
+  ProductInventory ProductInventory?
+  ProductPricing   ProductPricing?
+
+  @@index([supplierId], map: "supplierId")
+}
+
+model ProductInventory {
+  productId         BigInt  @id
+  stock             Int
+  warehouseLocation String? @db.VarChar(255)
+  reorderLevel      Int?
+  Product           Product @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ProductInventory_ibfk_1")
+}
+
+model ProductPricing {
+  productId BigInt   @id
+  listPrice Decimal  @db.Decimal(10, 2)
+  discount  Decimal? @default(0.00) @db.Decimal(10, 2)
+  netPrice  Decimal  @db.Decimal(10, 2)
+  currency  String   @db.VarChar(10)
+  Product   Product  @relation(fields: [productId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "ProductPricing_ibfk_1")
+}
+
+model Supplier {
+  id              BigInt           @id @default(autoincrement())
+  name            String           @db.VarChar(255)
+  Product         Product[]
+  SupplierContact SupplierContact?
+}
+
+model SupplierContact {
+  supplierId BigInt   @id
+  phone      String?  @db.VarChar(20)
+  email      String?  @db.VarChar(255)
+  address    String?  @db.Text
+  Supplier   Supplier @relation(fields: [supplierId], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "SupplierContact_ibfk_1")
+}
