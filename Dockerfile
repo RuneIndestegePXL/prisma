@@ -7,6 +7,8 @@ RUN npm install --production
 
 COPY . .
 
+RUN npx prisma generate
+
 EXPOSE 5858
 EXPOSE 4001
 
