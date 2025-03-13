@@ -15,9 +15,5 @@
   },
   "scripts": {
     "start": "node prisma.js"
-  },
-  "devDependencies": {
-    "@prisma/client": "^6.4.1",
-    "prisma": "^6.4.1"
   }
 }
