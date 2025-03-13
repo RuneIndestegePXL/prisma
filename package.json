@@ -12,7 +12,7 @@
     "graphql-tag": "^2.12.6"
   },
   "scripts": {
-    "start": "node gateway.js"
+    "start": "node prisma.js"
   },
   "devDependencies": {
     "@prisma/client": "^6.4.1",
